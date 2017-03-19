@@ -15,12 +15,12 @@ class MessageResponder
   end
 
   def respond
-    on(/^\/shot/) do
-      unless user.trusted
-        answer_with_message('You is not trusted user.')
-        return
-      end
+    unless user.trusted
+      answer_with_message('You is not trusted user.')
+      return
+    end
 
+    on(/^\/shot/) do
       photo = MotionService.new.snapshot
 
       if photo
@@ -28,6 +28,22 @@ class MessageResponder
       else
         answer_with_message('Can\'t take picture')
       end
+    end
+
+    on(/^\/subscribe/) do
+      subscribe = Subscribe.find_or_create_by(cid: message.chat.id)
+      answer_with_message(subscribe.persisted? ? 'Success' : 'Fail')
+    end
+
+    on(/^\/unsubscribe/) do
+      subscribe = Subscribe.find_by(cid: message.chat.id)
+
+      unless subscribe
+        answer_with_message('Subscribe not found.')
+        return
+      end
+
+      answer_with_message(subscribe.destroyed? ? 'Success.' : 'Fail.')
     end
   end
 
