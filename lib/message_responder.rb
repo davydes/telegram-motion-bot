@@ -44,6 +44,7 @@ class MessageResponder
         return
       end
 
+      subscribe.destroy
       answer_with_message(subscribe.destroyed? ? 'Success.' : 'Fail.')
     end
   end
