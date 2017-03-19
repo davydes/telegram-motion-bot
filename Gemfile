@@ -7,5 +7,7 @@ gem 'pg'
 gem 'rake'
 
 group :dev do
+  gem 'pry'
   gem 'rspec'
+  gem 'webmock'
 end

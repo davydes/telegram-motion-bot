@@ -14,7 +14,7 @@ module Motion
     private
 
     def command(name)
-      uri = URI.join(@url, @thread, name)
+      uri = URI.parse([@url, @thread, name].join('/'))
       res = Net::HTTP::get_response(uri)
       return res.is_a?(Net::HTTPSuccess)
     end
