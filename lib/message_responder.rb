@@ -33,19 +33,18 @@ class MessageResponder
 
     on(/^\/subscribe/) do
       subscribe = Subscribe.find_or_create_by(cid: message.chat.id)
-      answer_with_message(subscribe.persisted? ? 'Success' : 'Fail')
+      result_message(subscribe.persisted?)
     end
 
     on(/^\/unsubscribe/) do
       subscribe = Subscribe.find_by(cid: message.chat.id)
 
-      unless subscribe
-        answer_with_message('Subscribe not found.')
-        return
+      if subscribe
+        subscribe.destroy
+        result_message(subscribe.destroyed?)
+      else
+        answer_with_message('Subscribe not found')
       end
-
-      subscribe.destroy
-      answer_with_message(subscribe.destroyed? ? 'Success.' : 'Fail.')
     end
   end
 
@@ -72,5 +71,9 @@ class MessageResponder
 
   def answer_with_photo(filename)
     PhotoSender.new(bot: bot, chat: message.chat, photo: filename).send
+  end
+
+  def result_message(condition)
+    answer_with_message(condition ? 'Success' : 'Fail')
   end
 end
