@@ -3,6 +3,8 @@ require 'net/http'
 
 module Motion
   class Webcontrol
+    attr_accessor :logger
+
     def initialize(options = {})
       @url    = options[:url] || 'http://localhost:8080'
       @thread = options[:thread] || 0

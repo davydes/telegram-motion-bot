@@ -8,8 +8,11 @@ class MotionService
   end
 
   def snapshot
-    @webcontrol.snapshot ?
-      @files.last_snapshot :
+    if @webcontrol.snapshot
+      sleep(0.5)
+      @files.last_snapshot
+    else
       nil
+    end
   end
 end

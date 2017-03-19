@@ -15,15 +15,12 @@ class MessageResponder
   end
 
   def respond
-    on(/^\/start/) do
-      answer_with_greeting_message
-    end
-
-    on(/^\/stop/) do
-      answer_with_farewell_message
-    end
-
     on(/^\/shot/) do
+      unless user.trusted
+        answer_with_message('You is not trusted user.')
+        return
+      end
+
       photo = MotionService.new.snapshot
 
       if photo
@@ -49,14 +46,6 @@ class MessageResponder
         yield $1, $2
       end
     end
-  end
-
-  def answer_with_greeting_message
-    answer_with_message I18n.t('greeting_message')
-  end
-
-  def answer_with_farewell_message
-    answer_with_message I18n.t('farewell_message')
   end
 
   def answer_with_message(text)
