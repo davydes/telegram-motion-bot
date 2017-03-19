@@ -17,7 +17,10 @@ Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
     options = {bot: bot, message: message}
 
-    logger.debug "@#{message.from.username}: #{message.text}"
-    MessageResponder.new(options).respond
+    # somtime get nil message
+    if message
+      logger.debug "@#{message.from.username}: #{message.text}"
+      MessageResponder.new(options).respond
+    end
   end
 end
