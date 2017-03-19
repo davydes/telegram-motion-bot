@@ -1,4 +1,5 @@
 require './models/user'
+require './models/subscribe'
 require './lib/message_sender'
 require './lib/photo_sender'
 require './lib/services/motion_service'
