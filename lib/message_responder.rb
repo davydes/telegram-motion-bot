@@ -1,5 +1,7 @@
 require './models/user'
 require './lib/message_sender'
+require './lib/photo_sender'
+require './lib/services/motion_service'
 
 class MessageResponder
   attr_reader :message
@@ -13,12 +15,22 @@ class MessageResponder
   end
 
   def respond
-    on /^\/start/ do
+    on(/^\/start/) do
       answer_with_greeting_message
     end
 
-    on /^\/stop/ do
+    on(/^\/stop/) do
       answer_with_farewell_message
+    end
+
+    on(/^\/shot/) do
+      photo = MotionService.new.snapshot
+
+      if photo
+        answer_with_photo(photo)
+      else
+        answer_with_message('Can\'t take picture')
+      end
     end
   end
 
@@ -49,5 +61,9 @@ class MessageResponder
 
   def answer_with_message(text)
     MessageSender.new(bot: bot, chat: message.chat, text: text).send
+  end
+
+  def answer_with_photo(filename)
+    PhotoSender.new(bot: bot, chat: message.chat, photo: filename).send
   end
 end

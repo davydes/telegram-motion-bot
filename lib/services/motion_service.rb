@@ -1,4 +1,5 @@
 require './lib/motion/webcontrol'
+require './lib/motion/files'
 
 class MotionService
   def initialize

@@ -1,3 +1,4 @@
+require './lib/app_configurator'
 require 'net/http'
 
 module Motion
@@ -5,6 +6,7 @@ module Motion
     def initialize(options = {})
       @url    = options[:url] || 'http://localhost:8080'
       @thread = options[:thread] || 0
+      @logger = AppConfigurator.new.get_logger
     end
 
     def snapshot
@@ -16,7 +18,10 @@ module Motion
     def command(name)
       uri = URI.parse([@url, @thread, name].join('/'))
       res = Net::HTTP::get_response(uri)
-      return res.is_a?(Net::HTTPSuccess)
+      res.is_a?(Net::HTTPSuccess)
+    rescue => e
+      logger.debug e.message
+      false
     end
   end
 end
