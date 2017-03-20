@@ -22,10 +22,10 @@ class MessageResponder
     end
 
     on(/^\/shot/) do
-      photo = MotionService.new.snapshot
+      photos = MotionService.new.snapshot
 
-      if photo
-        answer_with_photo(photo)
+      if photos
+        photos.each { |photo| answer_with_photo(photo) }
       else
         answer_with_message('Can\'t take picture')
       end
