@@ -2,6 +2,7 @@ require './models/user'
 require './models/subscribe'
 require './lib/message_sender'
 require './lib/photo_sender'
+require './lib/video_sender'
 require './lib/services/motion_service'
 
 class MessageResponder
@@ -28,6 +29,16 @@ class MessageResponder
         photos.each { |photo| answer_with_photo(photo) }
       else
         answer_with_message('Can\'t take picture')
+      end
+    end
+
+    on(/^\/last movie (\d)/) do |n|
+      movie = MotionService.new.last_movie(n)
+
+      if movie
+        answer_with_video(movie)
+      else
+        answer_with_message('Can\'t find last movie')
       end
     end
 
@@ -71,6 +82,10 @@ class MessageResponder
 
   def answer_with_photo(filename)
     PhotoSender.new(bot: bot, chat: message.chat, photo: filename).send
+  end
+
+  def answer_with_video(filename)
+    VideoSender.new(bot: bot, chat: message.chat, video: filename).send
   end
 
   def result_message(condition)
